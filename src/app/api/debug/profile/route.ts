@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import { getUserTournamentRegistrations } from '@/lib/getUserRegistrations'; 
+import { TournamentRegistration } from '@/types/registration';
 
 /**
  * GET debug profile info
@@ -22,18 +24,38 @@ export async function GET(req: NextRequest) {
     // User is authenticated, get their auth details
     const userId = session.user.id;
     const userEmail = session.user.email;
+    const username = session.user.name || userId;
     
-    // Look for registrations with the user's ID
+    console.log(`Debug Profile API - User ID: ${userId}, Email: ${userEmail}, Username: ${username}`);
+    
+    // Get full tournament registrations with tournament data
+    let registrations: TournamentRegistration[] = [];
+    try {
+      if (userId) {
+        registrations = await getUserTournamentRegistrations(userId);
+        console.log(`Debug Profile API - Found ${registrations.length} registrations for user ID`);
+      }
+    } catch (regError) {
+      console.error('Error getting tournament registrations:', regError);
+    }
+    
+    // Look for registrations with the user's ID (basic version)
     const { data: idRegistrations, error: idError } = await supabase
       .from('registrations')
-      .select('id, tournament_id, user_id, team_name, status')
+      .select(`
+        *,
+        tournament:tournaments(*)
+      `)
       .eq('user_id', userId);
       
-    // Look for registrations with the user's email
+    // Look for registrations with the user's email if email exists
     const { data: emailRegistrations, error: emailError } = userEmail ? 
       await supabase
         .from('registrations')
-        .select('id, tournament_id, user_id, team_name, status')
+        .select(`
+          *,
+          tournament:tournaments(*)
+        `)
         .eq('user_id', userEmail) : 
       { data: null, error: null };
     
@@ -41,8 +63,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       sessionUser: {
         id: userId,
-        email: userEmail
+        email: userEmail,
+        username: username
       },
+      registrations: registrations, // Include the full tournament registrations
       idRegistrations: {
         count: idRegistrations?.length || 0,
         registrations: idRegistrations || [],
@@ -56,6 +80,7 @@ export async function GET(req: NextRequest) {
     });
     
   } catch (error: any) {
+    console.error('Error in debug profile API:', error);
     return NextResponse.json({ 
       error: 'Error fetching profile debug info', 
       message: error.message || 'Unknown error'
