@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env*.local
+!.env.example
+!.env.local.example
 
 # vercel
 .vercel
@@ -39,3 +42,33 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific
+Thumbs.db
+desktop.ini
+
+# Local Supabase data
+/supabase/.branches
+/supabase/.temp
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Local database files
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# ngrok configuration
+ngrok.yml
