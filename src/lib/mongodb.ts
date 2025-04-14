@@ -101,4 +101,9 @@ export async function connectToDatabase() {
   });
   
   return connectionPromise;
-} 
+}
+
+// Add this for compatibility with imports expecting a default export
+const clientPromise = connectToDatabase().then(({ client }) => client);
+
+export default clientPromise; 

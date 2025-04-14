@@ -72,3 +72,5 @@ logs/
 
 # ngrok configuration
 ngrok.yml
+
+.vercel

@@ -187,7 +187,7 @@ export default function TournamentsPage() {
       </section>
       
       {/* Filter Section */}
-      <section className="py-8 bg-slate-800 sticky top-16 z-10">
+      <section className="py-8 bg-slate-800 border-t border-b border-slate-700">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-between items-center">
             <div className="flex flex-wrap gap-4 md:gap-6">

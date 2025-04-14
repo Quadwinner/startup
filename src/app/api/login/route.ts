@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import clientPromise from '@/lib/mongodb';
+import { connectToDatabase } from '@/lib/mongodb';
 
 // Define login input schema for validation
 const loginSchema = z.object({
@@ -34,8 +34,7 @@ export async function POST(request: NextRequest) {
     const { email, password } = validationResult.data;
     
     // Connect to MongoDB
-    const client = await clientPromise;
-    const db = client.db();
+    const { db } = await connectToDatabase();
     const users = db.collection('users');
     
     // Find the user by email
