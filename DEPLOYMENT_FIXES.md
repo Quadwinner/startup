@@ -24,11 +24,9 @@ This document outlines the fixes made to address the build errors encountered du
      - Other critical configuration values
 
 5. **Vercel Configuration**
-   - Problem: Missing optimized Vercel configuration
-   - Fix: Created a comprehensive `vercel.json` with:
-     - Build settings
-     - Headers for security
-     - Next.js configuration
+   - Problem: Error with the builds section in vercel.json 
+   - Fix: Simplified vercel.json by removing the builds section to let Vercel auto-detect the Next.js project
+   - Alternative solution: If problems persist, use the minimal vercel.json.minimal file (rename to vercel.json)
 
 ## Deployment Steps
 
@@ -40,6 +38,14 @@ This document outlines the fixes made to address the build errors encountered du
    - Deploy the application
 
 3. Monitor the build logs to ensure no new errors
+
+## Alternative Deployment Approach
+
+If you continue to face configuration issues:
+
+1. Delete the vercel.json file completely and let Vercel auto-detect settings
+2. Or rename vercel.json.minimal to vercel.json for a bare-bones configuration
+3. Set all environment variables directly in the Vercel dashboard
 
 ## Important Environment Variables
 
